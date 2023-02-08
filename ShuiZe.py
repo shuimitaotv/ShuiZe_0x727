@@ -1087,6 +1087,8 @@ def run_subdomain():
     # 8. 获取所有子域名的参数链接（存活）
     param_Links = run_ParamLinks()
 
+    print(param_Links)
+
     # 获取C段的IP
     CIP_List = get_CIP(Subdomains_ips, CDNSubdomainsDict, censysIPS)
     print('C段的IP:{}'.format(CIP_List))
@@ -1424,6 +1426,7 @@ def _init():
     parse.add_option('-f', '--file', dest='File', type='string', default=None, help='/result/2ddcaa3ebbd0/172.18.82.0.xlsx')  # 扫描内网的服务漏洞-未授权和弱口令
     parse.add_option('-w', '--weak', dest='weak', type='int', default=None, help='run weak password script')                    # 内网弱口令是否要跑
     parse.add_option('-v', '--vpn', dest='vpn', type='int', default=None, help='Run in the case of vpn')            # 在vpn的情况下跑
+    parse.add_option('-o', '--output', dest='output', type='string', default=None, help='output file')            # 输出文件的位置
     parse.add_option('--web', dest='web', type='int', default=None, help='detect web in Intranet')  # 跑内网的web漏洞
     parse.add_option('--mn', dest='masNmapFile', type='str', default=None, help='run masscan nmap result')          # 跑masscan和nmap的结果
     parse.add_option('--fofaTitle', dest='fofaTitle', type='str', default=None, help='run fofa title')  # 跑fofa的title
@@ -1435,7 +1438,7 @@ def _init():
 
 
     options, args = parse.parse_args()
-    domain, cSubnet, isIntranet, proxy, File, weak, vpn, masNmapFile, fofaTitle, domainFile, web, ksubdomain, justInfoGather, testDemo, getSocks = options.domain, options.cSubnet, options.isIntranet, options.proxy, options.File, options.weak, options.vpn, options.masNmapFile, options.fofaTitle, options.domainFile, options.web, options.ksubdomain, options.justInfoGather, options.testDemo, options.getSocks
+    domain, cSubnet, isIntranet, proxy, File, weak, vpn, masNmapFile, fofaTitle, domainFile, web, ksubdomain, justInfoGather, testDemo, getSocks ,output= options.domain, options.cSubnet, options.isIntranet, options.proxy, options.File, options.weak, options.vpn, options.masNmapFile, options.fofaTitle, options.domainFile, options.web, options.ksubdomain, options.justInfoGather, options.testDemo, options.getSocks,options.output
 
     # 所有目标
     allTargets_List = []
@@ -1522,6 +1525,8 @@ def _init():
             xlsxFileWB = openpyxl.load_workbook(File)  # 打开文件
         else:           # 扫描内网web漏洞
             save_fold_path = os.getcwd() + '/result/' + str(uuid4()).split('-')[-1]  # 保存路径
+            if output :
+                save_fold_path=output
             os.makedirs(save_fold_path)
             with open(File, 'rt') as f:
                 for each in f.readlines():
@@ -1532,6 +1537,8 @@ def _init():
     else:
         try:
             save_fold_path = os.getcwd() + '/result/' + str(uuid4()).split('-')[-1] # 保存路径
+            if output :
+                save_fold_path=output
             os.makedirs(save_fold_path)
         except Exception:
             pass
