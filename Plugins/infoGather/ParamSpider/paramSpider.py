@@ -4,11 +4,12 @@ from queue import Queue
 from urllib.parse import urlparse
 import re
 import chardet
+import os
 
 headers = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36"}
 
 # 黑名单后缀
-# black_ext = ['jpg', 'jpeg', 'gif', 'png', 'ico', 'swf', 'css', 'js', 'jhtml', 'htm', 'html', 'doc', 'pdf', 'mso', 'docx', 'xls', 'xlsx', ';']
+black_ext = ['.jpg', '.jpeg', '.gif', '.png', '.ico', '.svg', '.eot', '.ttf', '.woff', '.woff2', '.swf', '.css', '.js', '.doc', '.pdf', '.mso', '.docx', '.xls', '.xlsx', ';']
 
 # 白名单
 white_ext = ['asp', 'aspx', 'php', 'jsp', 'jspx', 'html', 'htm', 'jhtml']
@@ -57,6 +58,12 @@ def getLinks(domain):
 
         # with open('test.txt', 'rt') as f:
         #     text = f.read()
+        # os.system("getallurls --blacklist png,jpg,gif,ico,woff2,pdf,css,js,svg,ttf,woff,eot --o {domain}.getallurls {domain}".format(domain=domain))
+
+        # with open('{}.getallurls'.format(domain), 'rt') as f:
+        #     text+=f.read()
+        
+        # os.remove('{}.getallurls'.format(domain))
 
         # 获取动态链接
         allParamNames = []                              # [['q', 'buyType', 'catNo', 'page'], ['id', 'flag']]
@@ -67,13 +74,25 @@ def getLinks(domain):
             query = urlparse(link).query        # q=*&buyType=4&catNo=11660&page=1
             for each in query.split('=')[:-1]:
                 paramName.append(each.split('&')[-1])   # ['q', 'buyType', 'catNo', 'page']
+            
+            # url=link
+            # if url.find("#")>=0:
+            #     url=url[: url.index("#")]
+            # if url.find("?")>=0:
+            #     url=url[: url.index("?")]
+            # if url.find("//")>=0:
+            #     url=url[url.index("//")+2:]
+
+            
+            # paramName.append(url)
             paramName.sort()                            # 排序
+            
             if paramName not in allParamNames:
                 allParamNames.append(paramName)
-                # print(link, paramName)
+                # _,sub=os.path.splitext(url)
+                # if not (sub is not None and sub in black_ext):
                 paramLinks.append(link)
-
-
+                # print(link, paramName)
 
         # 获取后台地址
         for link in text.split('\n'):

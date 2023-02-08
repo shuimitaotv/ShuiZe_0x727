@@ -1087,8 +1087,6 @@ def run_subdomain():
     # 8. 获取所有子域名的参数链接（存活）
     param_Links = run_ParamLinks()
 
-    print(param_Links)
-
     # 获取C段的IP
     CIP_List = get_CIP(Subdomains_ips, CDNSubdomainsDict, censysIPS)
     print('C段的IP:{}'.format(CIP_List))
@@ -1172,6 +1170,8 @@ def run_cSubnet(CIP_List, Subdomains_ips, notCDNSubdomains, param_Links):
     cprint(r'资产信息保存路径：{}'.format('{}/{}.xlsx'.format(save_fold_path, excel_name)), 'green')
     cprint(r'Github信息保存路径：{}/{}_github.txt'.format(save_fold_path, domain), 'green')
 
+    os.remove('{}.txt'.format(domain))
+
     if domain:
         ret = ""
         for cip in CIP_List:
@@ -1179,6 +1179,7 @@ def run_cSubnet(CIP_List, Subdomains_ips, notCDNSubdomains, param_Links):
             ret += ","
         cprint(r"请使用-c功能跑C段资产", 'green')
         cprint(r"python3 ShuiZe.py -c {}".format(ret[:-1]), 'red')
+
 
 # 跑fofa Title漏洞
 def run_fofaTitle():
@@ -1284,8 +1285,6 @@ def run_intranet_cSubnet():
     printSave_Vul(webVul_list+winVul_list)
 
     cprint(r'保存路径：{}'.format('{}/{}.xlsx'.format(save_fold_path, excel_name)), 'green')
-
-
 
 
 # 内网服务漏洞检测
